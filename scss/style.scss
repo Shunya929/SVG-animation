@@ -1,0 +1,28 @@
+@use "reset";
+
+body {
+  background-color: rgba(0,0,0,.3);
+  position: relative;
+  cursor: none;
+}
+
+
+.cursor {
+  position: absolute; 
+  top: 0;
+  left: 0; 
+  cursor: none;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+	
+.cursor {
+  width: 100px;
+  height: 100px;
+  z-index: 1001; 
+}
+
+img {
+  background-color: rgba(0,0,0,.3);
+}

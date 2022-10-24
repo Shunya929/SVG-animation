@@ -1,0 +1,30 @@
+{
+  "name": "svg-animation-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shunya929/SVG-animation.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Shunya929/SVG-animation/issues"
+  },
+  "homepage": "https://github.com/Shunya929/SVG-animation#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^6.1.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-progeny": "^0.4.1",
+    "gulp-sass": "^5.1.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "minimatch": "^5.1.0",
+    "mocha": "^10.1.0",
+    "url-loader": "^1.1.2"
+  }
+}
