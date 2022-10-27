@@ -8,7 +8,8 @@ html {
   -webkit-text-size-adjust: 100%; /* Prevent adjustments of font size after orientation changes in iOS */
   word-break: normal;
   -moz-tab-size: 4;
-  tab-size: 4;
+  -o-tab-size: 4;
+     tab-size: 4;
 }
 
 *,
@@ -59,7 +60,8 @@ abbr[title] {
   border-bottom: none; /* Remove the bottom border in Chrome 57 */
   /* Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari */
   text-decoration: underline;
-  text-decoration: underline dotted;
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted;
 }
 
 a {
@@ -297,7 +299,35 @@ body {
 }
 
 img {
-  background-color: rgba(0, 0, 0, 0.3);
+  position: absolute;
+}
+
+.c-pic1 {
+  height: 600px;
+  width: auto;
+  top: 200px;
+  left: 20%;
+}
+
+.c-pic2 {
+  z-index: 2;
+  height: 100px;
+  width: auto;
+  top: 650px;
+  left: 40%;
+}
+
+main {
+  width: 600px;
+}
+main p {
+  margin-bottom: 20px;
+  padding-top: 10px;
+}
+main span {
+  font-size: 16px;
+  color: #222222;
+  background-color: red;
 }
 
 /*# sourceMappingURL=style.css.map */
