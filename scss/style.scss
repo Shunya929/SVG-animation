@@ -43,20 +43,22 @@ img {
   left: 40%;
 }
 
-.c-pic2.is-hover {
+// .c-pic2.is-hover {
   // opacity: 1;
+// }
+
+.test-mask {
+  display: block;
+  max-width: 50%;
+  height: auto;
+  margin: 0 auto;
+  mask-image: url("/img/heart.svg");
+  mask-mode: alpha;
+  mask-repeat: no-repeat;
+  mask-size: 80%;
 }
 
-main {
-  width: 600px;
-  p {
-      margin-bottom: 20px;
-      padding-top: 10px;
-  }
-  span {
-      font-size: 16px;
-      color: #222222;
-      background-color: red;
 
-  }
+body {
+  background-color: blueviolet;
 }

@@ -4,17 +4,19 @@
    # Global selectors
    # ================================================================= */
 html {
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   -webkit-text-size-adjust: 100%; /* Prevent adjustments of font size after orientation changes in iOS */
-  word-break: normal;
   -moz-tab-size: 4;
   -o-tab-size: 4;
-     tab-size: 4;
+  box-sizing: border-box;
+  tab-size: 4;
+  word-break: normal;
 }
 
 *,
 ::before,
 ::after {
+  -webkit-box-sizing: inherit;
   background-repeat: no-repeat; /* Set `background-repeat: no-repeat` to all elements and pseudo elements */
   box-sizing: inherit;
 }
@@ -26,17 +28,17 @@ html {
 }
 
 * {
-  padding: 0; /* Reset `padding` and `margin` of all elements */
   margin: 0;
+  padding: 0; /* Reset `padding` and `margin` of all elements */
 }
 
 /* # =================================================================
    # General elements
    # ================================================================= */
 hr {
-  overflow: visible; /* Show the overflow in Edge and IE */
-  height: 0; /* Add the correct box sizing in Firefox */
   color: inherit; /* Correct border color in Firefox. */
+  height: 0; /* Add the correct box sizing in Firefox */
+  overflow: visible; /* Show the overflow in Edge and IE */
 }
 
 details,
@@ -57,11 +59,11 @@ small {
 }
 
 abbr[title] {
+  -webkit-text-decoration: underline dotted;
   border-bottom: none; /* Remove the bottom border in Chrome 57 */
   /* Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari */
   text-decoration: underline;
-  -webkit-text-decoration: underline dotted;
-          text-decoration: underline dotted;
+  text-decoration: underline dotted;
 }
 
 a {
@@ -231,8 +233,8 @@ legend {
   color: inherit; /* Correct the color inheritance from `fieldset` elements in IE */
   display: table; /* Correct the text wrapping in Edge and IE */
   max-width: 100%; /* Correct the text wrapping in Edge and IE */
-  white-space: normal; /* Correct the text wrapping in Edge and IE */
   max-width: 100%; /* Correct the text wrapping in Edge 18- and IE */
+  white-space: normal; /* Correct the text wrapping in Edge and IE */
 }
 
 ::-webkit-file-upload-button {
@@ -279,22 +281,22 @@ progress {
 
 body {
   background-color: rgba(0, 0, 0, 0.3);
-  position: relative;
   cursor: none;
+  position: relative;
 }
 
 .cursor {
+  border-radius: 50%;
+  cursor: none;
+  left: 0;
+  pointer-events: none;
   position: absolute;
   top: 0;
-  left: 0;
-  cursor: none;
-  pointer-events: none;
-  border-radius: 50%;
 }
 
 .cursor {
-  width: 100px;
   height: 100px;
+  width: 100px;
   z-index: 1001;
 }
 
@@ -304,30 +306,33 @@ img {
 
 .c-pic1 {
   height: 600px;
-  width: auto;
-  top: 200px;
   left: 20%;
+  top: 200px;
+  width: auto;
 }
 
 .c-pic2 {
-  z-index: 2;
   height: 100px;
-  width: auto;
-  top: 650px;
   left: 40%;
+  top: 650px;
+  width: auto;
+  z-index: 2;
 }
 
-main {
-  width: 600px;
-}
-main p {
-  margin-bottom: 20px;
-  padding-top: 10px;
-}
-main span {
-  font-size: 16px;
-  color: #222222;
-  background-color: red;
+.test-mask {
+  -webkit-mask-image: url("/img/heart.svg");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 80%;
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  mask-image: url("/img/heart.svg");
+  mask-mode: alpha;
+  mask-repeat: no-repeat;
+  mask-size: 80%;
+  max-width: 50%;
 }
 
-/*# sourceMappingURL=style.css.map */
+body {
+  background-color: blueviolet;
+}

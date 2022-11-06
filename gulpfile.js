@@ -1,103 +1,92 @@
-let gulp = require( 'gulp' );
-let sass         = require( 'gulp-sass' );         // 1
-let autoprefixer = require( 'gulp-autoprefixer' ); // 1
-let plumber      = require( 'gulp-plumber' );      // 1
-let sourcemaps   = require( 'gulp-sourcemaps' );   // 1
-
-// Sass
-gulp.task('sass', function(){ // 2
-    return gulp.src( './scss/**/*.scss' ) // 3
-        .pipe( plumber() ) // 4
-        .pipe( progeny() ) // 4
-        .pipe( sourcemaps.init() ) // 5
-        .pipe( sass( { // 6
-            outputStyle: 'expanded'
-        } ) )
-        .pipe( autoprefixer( { // 7
-            browsers: ['last 2 version', 'iOS >= 8.1', 'Android >= 4.4'],
-            cascade: false
-        } ) )
-        .pipe( sourcemaps.write() ) // 5
-        .pipe( gulp.dest( './css/')) // 8
-} );
-
-let changed      = require( 'gulp-changed' );
-let imagemin     = require( 'gulp-imagemin' );
-let imageminJpg  = require( 'imagemin-jpeg-recompress' );
-let imageminPng  = require( 'imagemin-pngquant' );
-let imageminGif  = require( 'imagemin-gifsicle' );
-let svgmin       = require( 'gulp-svgmin' );
-
-gulp.task('imagemin', function() {
-    // jpeg,png,gif
-    return gulp.src( './img/**/*.+(png|jpg|jpeg|gif)' ) // 1
-       .pipe( changed( './img' ) ) // 2
-       .pipe( imagemin( [ // 3
-           imageminPng(),
-           imageminJpg(),
-           imageminGif({
-               interlaced: false,
-               optimizationLevel: 3,
-               colors: 180
-           } )
-       ] ) )
-       .pipe( gulp.dest( './img/' ) );
-   // svg
-   return gulp.src( './img/**/*.+(svg)' ) // 4
-       .pipe( changed( './img' ) )
-       .pipe( svgmin() ) // 5
-       .pipe( gulp.dest( './img/' ) );
-} );
-
-let concat       = require( 'gulp-concat' );
-let jshint       = require( 'gulp-jshint' );
-let rename       = require( 'gulp-rename' );
-let uglify       = require( 'gulp-uglify' );
-
-// concat js file(s)
-gulp.task( 'js.concat', function() {
-    return gulp.src( [
-        './js/main.js' // 1
-    ] )
-        .pipe( plumber() )
-        .pipe( jshint() ) // 2
-        .pipe( jshint.reporter( 'default' ) ) // 2
-        .pipe( concat( 'bundle.js' ) ) // 3
-        .pipe( gulp.dest( './js' ) );
-} );
-
-// compress js file(s)
-gulp.task( 'js.compress', function() {
-    return gulp.src( './js/bundle.js' )
-        .pipe( plumber() )
-        .pipe( uglify() ) // 4
-        .pipe( rename( 'bundle.min.js' ) ) // 5
-        .pipe( gulp.dest( './js' ) );
-} );
-
-let browserSync  = require( 'browser-sync' );
-
-// Browser Sync
-gulp.task('bs', function() {
-    browserSync({
-        server: { // 1
-            baseDir: "./",
-            index: "index.html"
-        }
-    });
+import gulp  from'gulp';
+import dartSass from 'sass';
+import gulpSass from 'gulp-sass';
+const sass = gulpSass( dartSass );
+import plumber  from 'gulp-plumber'; //エラー時の強制終了を防止
+import notify  from 'gulp-notify'; //エラー発生時にデスクトップ通知する
+import sassGlob  from 'gulp-sass-glob-use-forward'; //@importの記述を簡潔にする(※gulp-sass-glob→gulp-sass-glob-use-forwardにした)
+import browserSync  from  'browser-sync' ; //ブラウザ反映
+import postcss  from 'gulp-postcss'; //autoprefixerとセット
+import autoprefixer  from 'autoprefixer'; //ベンダープレフィックス付与
+import cssdeclsort  from 'css-declaration-sorter'; //css並べ替え
+import imagemin  from 'gulp-imagemin';
+import optipng  from 'imagemin-optipng';
+import mozjpeg  from 'imagemin-mozjpeg';
+import ejs  from "gulp-ejs";
+import rename  from "gulp-rename"; //.ejsの拡張子を変更
+gulp.task('sass', function() {
+return gulp
+.src( './scss/**/*.scss' )
+.pipe( plumber({ errorHandler: notify.onError("Error: <%= error.message %>") }) )//エラーチェック
+.pipe( sassGlob() )//importの読み込みを簡潔にする
+.pipe( sass({
+outputStyle: 'expanded' //expanded, nested, campact, compressedから選択
+}) )
+.pipe( postcss([ autoprefixer(
+{
+// ☆IEは11以上、Androidは5以上
+// その他は最新2バージョンで必要なベンダープレフィックスを付与する
+"overrideBrowserslist": ["last 2 versions", "ie >= 11", "Android >= 5"],
+cascade: false}
+) ]) )
+.pipe( postcss([ cssdeclsort({ order: 'alphabetical' }) ]) )//プロパティをソートし直す(アルファベット順)
+.pipe(gulp.dest('./css'));//コンパイル後の出力先
 });
-
-// Reload Browser
-gulp.task( 'bs-reload', function() {
-    browserSync.reload(); // 2
+// 保存時のリロード
+gulp.task( 'browser-sync', function(done) {
+browserSync.init({
+//ローカル開発
+server: {
+baseDir: "./",
+index: "index.html"
+}
 });
-
-//
-// Default task
-//
-gulp.task( 'default', [ 'bs', 'sass', 'js.concat', 'js.compress', 'imagemin' ], function() { // 1
-    gulp.watch("./**/*.html", ['bs-reload']); // 2
-    gulp.watch("./scss/**/*.scss", [ 'sass', 'bs-reload' ]); // 3
-    gulp.watch("./js/*.js", [ 'js.concat', 'js.compress', 'bs-reload' ]); // 4
-    gulp.watch("./img/*", [ 'imagemin', 'bs-reload' ]); // 5
+done();
+});
+gulp.task( 'bs-reload', function(done) {
+browserSync.reload();
+done();
+});
+gulp.task("ejs", (done) => {
+gulp
+.src(["ejs/**/*.ejs", "!" + "ejs/**/_*.ejs"])
+.pipe( plumber({ errorHandler: notify.onError("Error: <%= error.message %>") }) )//エラーチェック
+.pipe(ejs())
+.pipe(rename({extname: ".html"})) //拡張子をhtmlに
+.pipe(gulp.dest("./")); //出力先
+done();
+});
+// 監視
+gulp.task( 'watch', function(done) {
+gulp.watch( './scss/**/*.scss', gulp.task('sass') ); //sassが更新されたらgulp sassを実行
+gulp.watch('**/*.html', gulp.task('bs-reload')); //htmlが更新されたらbs-reloadを実行
+gulp.watch('**/*.php', gulp.task('bs-reload')); //phpが更新されたらbs-reloadを実行
+gulp.watch('./scss/**/*.scss', gulp.task('bs-reload')); //sassが更新されたらbs-reloadを実行
+gulp.watch( './js/*.js', gulp.task('bs-reload') ); //jsが更新されたらbs-relaodを実行
+gulp.watch('./ejs/**/*.ejs',gulp.task('ejs') ) ; //ejsが更新されたらgulp-ejsを実行
+gulp.watch('./ejs/**/*.ejs',gulp.task('bs-reload') ) ; //ejsが更新されたらbs-reloadを実行
+});
+// default
+gulp.task('default', gulp.series(gulp.parallel('browser-sync', 'watch')));
+//圧縮率の定義
+var imageminOption = [
+optipng({ optimizationLevel: 5 }),
+mozjpeg({ quality: 85 }),
+imagemin.gifsicle({
+interlaced: false,
+optimizationLevel: 1,
+colors: 256
+}),
+imagemin.mozjpeg(),
+imagemin.optipng(),
+imagemin.svgo()
+];
+// 画像の圧縮
+// $ gulp imageminで./src/img/base/フォルダ内の画像を圧縮し./src/img/フォルダへ
+// .gifが入っているとエラーが出る
+gulp.task('imagemin', function () {
+return gulp
+.src('./img/*.{png,jpg,gif,svg}')
+.pipe(imagemin(imageminOption))
+.pipe(gulp.dest('./img'));
 });
